@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Futuristic Salary Dashboard - By Bishal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #1f1c2c;
+      --glass: rgba(255, 255, 255, 0.1);
+      --text: #fff;
+      --primary: #6a11cb;
+      --secondary: #2575fc;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--bg), #928dab);
+      color: var(--text);
+      display: flex;
+      min-height: 100vh;
+      padding: 2rem;
+      flex-direction: column;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-weight: 600;
+    }
+    .dashboard {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .card {
+      background: var(--glass);
+      border-radius: 20px;
+      padding: 2rem;
+      flex: 1;
+      min-width: 300px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+      font-weight: 300;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 0.6rem;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 1rem;
+    }
+    .output {
+      font-weight: 400;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+    .btn {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: #fff;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      cursor: pointer;
+    }
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>💼 Futuristic Salary Calculator Dashboard</h1>
+  <div class="dashboard">
+    <div class="card">
+      <h2>Enter Your Details</h2>
+      <label>💰 Monthly Salary</label>
+      <input type="number" id="salary" placeholder="₹ e.g. 50000" />
+
+      <label>🕒 Duty Hours/Day</label>
+      <input type="number" id="dutyHours" placeholder="e.g. 8" />
+
+      <label>📅 Working Days in Month</label>
+      <input type="number" id="workingDays" placeholder="e.g. 26" />
+
+      <label>🏠 Home Rent</label>
+      <input type="number" id="rent" placeholder="₹ e.g. 10000" />
+
+      <label>🍱 Food Spent</label>
+      <input type="number" id="food" placeholder="₹ e.g. 4000" />
+
+      <label>💊 Healthcare</label>
+      <input type="number" id="health" placeholder="₹ e.g. 2000" />
+
+      <label>🧴 Skincare</label>
+      <input type="number" id="skin" placeholder="₹ e.g. 1000" />
+
+      <label>🍔 Outside Food</label>
+      <input type="number" id="outsideFood" placeholder="₹ e.g. 1500" />
+
+      <label>➕ Additional Spent</label>
+      <input type="number" id="additional" placeholder="₹ e.g. 3000" />
+
+      <label>🏦 Other Income</label>
+      <input type="number" id="otherIncome" placeholder="₹ e.g. 5000" />
+
+      <button class="btn" onclick="calculateSalary()">Calculate</button>
+    </div>
+
+    <div class="card">
+      <h2>Results</h2>
+      <div class="output" id="results">Fill details to see results...</div>
+      <canvas id="expenseChart" style="max-width: 300px; margin-top: 20px;"></canvas>
+    </div>
+  </div>
+  <footer>© 2025 | Designed & Developed by Bishal 💻</footer>
+
+  <script>
+    function calculateSalary() {
+      const salary = parseFloat(document.getElementById('salary').value) || 0;
+      const duty = parseFloat(document.getElementById('dutyHours').value) || 0;
+      const days = parseFloat(document.getElementById('workingDays').value) || 0;
+      const rent = parseFloat(document.getElementById('rent').value) || 0;
+      const food = parseFloat(document.getElementById('food').value) || 0;
+      const health = parseFloat(document.getElementById('health').value) || 0;
+      const skin = parseFloat(document.getElementById('skin').value) || 0;
+      const outside = parseFloat(document.getElementById('outsideFood').value) || 0;
+      const additional = parseFloat(document.getElementById('additional').value) || 0;
+      const otherIncome = parseFloat(document.getElementById('otherIncome').value) || 0;
+
+      const totalSpent = rent + food + health + skin + outside + additional;
+      const totalIncome = salary + otherIncome;
+      const remaining = totalIncome - totalSpent;
+      const percentSaved = totalIncome > 0 ? ((remaining / totalIncome) * 100).toFixed(2) : 0;
+
+      const totalHours = duty * days;
+      const perHour = totalHours > 0 ? (salary / totalHours).toFixed(2) : 0;
+      const perMin = totalHours > 0 ? (salary / (totalHours * 60)).toFixed(2) : 0;
+      const perSec = totalHours > 0 ? (salary / (totalHours * 3600)).toFixed(4) : 0;
+
+      document.getElementById('results').innerHTML = `
+        <strong>💰 Total Income (Salary + Other):</strong> ₹${totalIncome.toFixed(2)}<br>
+        <strong>💸 Final Salary After Deductions:</strong> ₹${remaining.toFixed(2)}<br>
+        <strong>🧾 Total Spent:</strong> ₹${totalSpent.toFixed(2)}<br>
+        <strong>💹 Savings %:</strong> ${percentSaved}%<br>
+        <strong>⏱ Per Hour:</strong> ₹${perHour}<br>
+        <strong>🕐 Per Minute:</strong> ₹${perMin}<br>
+        <strong>⏰ Per Second:</strong> ₹${perSec}<br>
+      `;
+
+      const ctx = document.getElementById('expenseChart').getContext('2d');
+      if (window.expenseChart) window.expenseChart.destroy();
+      window.expenseChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Rent', 'Food', 'Healthcare', 'Skincare', 'Outside Food', 'Additional'],
+          datasets: [{
+            data: [rent, food, health, skin, outside, additional],
+            backgroundColor: ['#FF6384','#36A2EB','#FFCE56','#8e44ad','#00b894','#d63031'],
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'bottom' }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
